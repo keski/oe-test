@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<title>EventODP</title>
+<style>
+        #pylode {
+            position: fixed;
+            top: 130px;
+            left: -80px;
+            font-size: small;
+            transform: rotate(-90deg);
+            color: grey;
+        }
+        #pylode a {
+            font-size: 2em;
+            font-weight: bold;
+            text-decoration: none;
+            color: #005A9C;
+        }
+        #pylode a:hover {
+            color: #333;
+        }
+        #pylode #p {
+            color: #329545;
+        }
+        #pylode #y {
+            color: #f9cb33;
+        }
+        #pylode #version {
+            font-size: 1.0em;
+        }
+
+        .cardinality {
+            font-style: italic;
+            color: #aa00aa;
+        }
+
+        dl {
+            /*border: 1px solid navy;*/
+            /*padding:5px;*/
+        }
+
+        dt {
+            font-weight: bold;
+            padding: 0;
+        }
+
+        dd {
+            margin-bottom: 10px;
+            padding-top: 7px;
+        }
+
+        #metadata ul,
+        #classes ul {
+            list-style-type: none;
+        }
+
+        #metadata ul li,
+        #classes ul li {
+            margin-left: -40px;
+        }
+
+        ul.hlist {
+            list-style-type: none;
+            border: 1px solid navy;
+            padding:5px;
+            background-color: #F4FFFF;
+        }
+
+        ul.hierarchy {
+            border: 1px solid navy;
+            padding: 5px 25px 5px 25px;
+            background-color: #F4FFFF;
+        }
+
+
+        ul.hlist li {
+            display: inline;
+            margin-right: 10px;
+        }
+
+        .entity {
+            border: 1px solid navy;
+            margin:5px 0 5px 0;
+            padding: 5px;
+        }
+
+        .entity th {
+            width: 150px;
+            vertical-align: top;
+        }
+
+        .entity th,
+        .entity td {
+            padding-bottom: 20px;
+        }
+
+        .entity table th {
+            text-align: left;
+        }
+
+        section#overview img {
+            max-width: 1000px;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            text-align: left
+        }
+        h1, h2, h3 {
+            color: #005A9C; background: white
+        }
+        h1 {
+            font: 170% sans-serif;
+            line-height: 110%;
+        }
+        h2 {
+            font: 140% sans-serif;
+            margin-top:40px;
+        }
+        h3 {
+            font: 120% sans-serif;
+            margin-top: 20px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid navy;
+        }
+        h4 { font: bold 100% sans-serif }
+        h5 { font: italic 100% sans-serif }
+        h6 { font: small-caps 100% sans-serif }
+
+        body {
+            padding: 2em 70px 2em 70px;
+            margin: 0;
+            font-family: sans-serif;
+            color: black;
+            background: white;
+            background-position: top left;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            text-align: justify;
+        }
+
+        section {
+            max-width: 1500px;
+        }
+
+        .figure {
+            margin-bottom: 20px;
+        }
+
+        :link { color: #00C; background: transparent }
+        :visited { color: #609; background: transparent }
+        a:active { color: #C00; background: transparent }
+
+        .sup-c,
+        .sup-op,
+        .sup-fp,
+        .sup-dp,
+        .sup-ap,
+        .sup-p,
+        .sup-ni,
+        .sup-con,
+        .sup-col {
+            cursor:help;
+        }
+
+        .sup-c {
+            color:orange;
+        }
+
+        .sup-op {
+            color:navy;
+        }
+
+        .sup-fp {
+            color:lightskyblue;
+        }
+
+        .sup-dp {
+            color:green;
+        }
+
+        .sup-ap {
+            color:darkred;
+        }
+
+        .sup-p {
+            color:black;
+        }
+
+        .sup-ni {
+            color:brown;
+        }
+
+        .sup-con {
+            color:orange;
+        }
+
+        .sup-col {
+            color:darkred;
+        }
+
+        sup {
+            margin-left: -3px;
+        }
+        code {
+            font-size: large;
+            color: darkred;
+        }
+
+        /* less prominent links for properties */
+        .proplink {
+            color: #336;
+            text-decoration: none;
+        }
+
+#toc {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    height: 100%;
+    overflow-y: auto;
+    padding: 10px;
+    border: solid 1px navy;
+    font-size: small;
+    width: 180px;
+}
+#toc h3 {
+    margin-top: 5px;
+}
+
+#toc ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+#toc .first > li {
+    margin-top: 5px;
+}
+
+#toc .second,
+#toc .third {
+    padding-left: 10px;
+}
+
+#content {
+    width: calc(100% - 150px);
+}
+
+.hover_property {
+    cursor: help;
+    text-decoration: none;
+    border-bottom: dashed 1px;
+}
+
+.setclass {
+    list-style-type: none;
+}
+
+code{
+    word-wrap: break-word;
+  }
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+  td {
+    word-wrap: break-word;
+  }
+	</style>
+<link href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABhklEQVQ4jbWPzStEURjG3yQLirlGKUnKFO45Z+SjmXvnnmthQcpCoVhYmD/AwmJiI3OvZuZc2U3UlKU0/gAslMw9JgvhHxAr2fko7r0jHSsl+TgbTz2Lt5731/MASEiJW9ONml2QyX6rsGalmnT74v8BDf12hxJfpV8d1uwNKUBYszabdFv84L8B9X0rESVmmUup2fme0cVhJWaZHw4NWL1SewEAfDe6H3Dy6Ll456WEJsRZS630MwCAOI20ei5OBpxse5zcBZw8eS4uPpfIuDiCainIg9umBCU0GZzgLZ9Hn31OgoATL+CkLDGB5H1OKj4nFd/FBxUXJ0UZNb4edw/6nLyJXaj5FeCVyPLNIVmYK8TG1IwWb16L1gEACAFV90ftoT8bdOX0EeyY99gxBXZMgRz6qGb1KantAACI0UvE6F5XJqEjpsdURouI0Vt5gGOUkUNnPu7ObGIIMfNaGqDmjDRi9FZldF1lRgYzeqUyeoiY4ag5Iy3RgOYRM8+/M2bG8efsO4hGrpmJseyMAAAAAElFTkSuQmCC" rel="icon" sizes="16x16" type="image/png"/>
+<link href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAC40lEQVRYhe2UT0hUQRzHp6Iss1B3VZKIDbbdfW9mnoi4f3zzjkJQeOgS0SEIb1EWBGGlLLu460zQPQM1unUIIjA6rfpm6ZAhHjoIRVQUFUlEbG+euTsdXG1d3VL3bVD4g+9h+L35fT/8fvN7ADgY9aHY5fpIvK82HO9ysu66wxWOzbkjcekKx0a2ALYA/n2AGi3a6ArFezcidziecQygNhhrcUficjP6PwBqtGijKxy/thnVBePHywYoDsFhl53GV8SEcsTx4usCMLUewTVpc23BNvEzm6Neyf1+KcG2vwqwUjgrOJq2JmHftwmkVBRGTvncFodnbI7vChO/FRznCmHsNM7aHM9Yk7Df5iqsLMw9sMNOK2g+jS4IEz0UJv4iuJZb2RltWnB4UZqH6ioGAgAAGe5vtiZhtzDx7OoRadLmeM7m6IRjhnLMW2Vx1bA5GhAmnhIcz6/xNj4Ujsky8UspwfayjDPjsF2Y6L7N8Vzx/BfP+KPg6LbgSqd8DnfJW2CnbaLhfH5ephpqygJYvQU4Z3P82TLRsDDhUTnmrSq+Y3N0Mg+Xldy/zwEAnLMWZ3pHpNExmfLs/t0dOdVcbT0JeKxUwFP2VljjqiE47Jp53LTXNxhsUZjerTByXWX6VZWRs/4bIQ2ACv+UAomgDzLCISNZxAxZKMhIDjLy1JfsaK+I+eGBUBNk5E2x8RogX/PdcDZUqieWTSh5D6nOVKqfhoycUmlHFFIyu5RXqf7AcQDISCpv/tqbMBqK883RtmpISRoxQyJKPgGn3wNk5NEigDFa6hslqV/Kj+FdBQD0bshIDlKSLlVcoWQo36UhR80BAMB73lulMn0EMpJTqD6qJiOt3mho/8GbkT2BZNgDB/V+RI0fkOrT3kRIVQbaDizJm2hdNbINBxwk5xAj3yEjuV9rZ1iIkgxixkLBA83mz8uCjLwoGwAx0vOnFSy5mtR4VTaAQvVORMnwZgSpzkrV/QmdE2tKe46+MQAAAABJRU5ErkJggg==" rel="icon" sizes="32x32" type="image/png"/>
+<meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
+<script id="schema.org" type="application/ld+json">
+[
+  {
+    "@id": "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl",
+    "@type": [
+      "https://schema.org/DefinedTermSet"
+    ],
+    "https://schema.org/creator": [
+      {
+        "@value": "Eva Blomqvist and Mikko Rinne"
+      }
+    ],
+    "https://schema.org/name": [
+      {
+        "@value": "EventODP"
+      }
+    ]
+  }
+]
+	</script>
+</head>
+<body>
+<div id="content">
+<div class="section" id="metadata">
+<h1>EventODP</h1>
+<h2>Metadata</h2>
+<dl>
+<div>
+<dt>
+<strong>IRI</strong>
+</dt>
+<dd>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl</code>
+</dd>
+</div>
+<div>
+<dt>
+<a class="hover_property" href="http://purl.org/dc/terms/title" title="A name given to the resource. Defined in DCMI Metadata Terms">Title</a>
+</dt>
+<dd><p>EventODP</p></dd>
+</div>
+<div>
+<dt>
+<a class="hover_property" href="http://purl.org/dc/terms/creator" title="An entity responsible for making the resource. Defined in DCMI Metadata Terms">Creator</a>
+</dt>
+<dd><p>Eva Blomqvist and Mikko Rinne</p></dd>
+</div>
+<div>
+<dt>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#versionInfo" title="The annotation property that provides version information for an ontology or another OWL construct. Defined in The OWL 2 Schema vocabulary (OWL 2)">Version Info</a>
+</dt>
+<dd><p>Created with TopBraid Composer</p></dd>
+</div>
+</dl>
+</div>
+<div class="section" id="overview">
+<h2>Overview</h2>
+<div class="figure">
+<iframe height="800px" src="webvowl/index.html#ce-graph-1.0" width="100%"></iframe>
+<div class="caption"><strong>Figure 1:</strong> Ontology overview</div>
+</div>
+
+</div>
+<div class="section" id="classes">
+<h2>Classes</h2>
+<div class="property entity" id="simpleeventobject">
+<h3>simple event object
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#SimpleEventObject</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>An event object that is not an abstraction of other event objects, nor is composed of other event objects.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="EventObject">
+<h3>Event object
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#EventObject</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>An object that represents, encodes, or records an event, generally for the purpose of computer processing. </p>
+<p>An event object may consist of an event object header and a body, where the header is defined as the part of the event object that can be interpreted by the event processing system, i.e. and event object needs to contain at least some information (e.g. with a known vocabulary) that can be used by the event processing system. Note that the open world assumption allows us to choose not to explicitly specify a header, despite the restriction that it exists. </p>
+<p>An event object is either a complex event, i.e. an event object that has some relation (either through abstraction or componency) to other event objects, or a simple event. </p>
+<p>An event object records information about an actual event, which is then by implication a documented event (i.e. participating in an event documentation situation).</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<ul>
+<li><span>
+<span>
+<span>
+<a href="#hasEventDuration">hasEventDuration</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span> <span class="cardinality">or</span> <span>
+<span>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span></li>
+<li><span>
+<a href="http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#EventDocumentationDescription">model:EventDocumentationDescription</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#EventInterpretationDescription">model:EventInterpretationDescription</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span></li>
+<li><span>
+<span>
+<span>
+<a href="#hasEventObjectHeader">hasEventObjectHeader</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span> <span class="cardinality">or</span> <span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span> <span class="cardinality">or</span> <span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span></li>
+<li>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#InformationObject">ns2:InformationObject</a>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<span>
+<span>
+<a href="#informationAboutEvent">informationAboutEvent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+</li>
+<li><span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="#simpleeventobject">SimpleEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span></li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inDomainOf" title="Inverse of rdfs:domain. Defined in Ontology Documentation Profile">In Domain Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#isEventObjectComponentOf">isEventObjectComponentOf</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasEventObjectBody">hasEventObjectBody</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasEventObjectHeader">hasEventObjectHeader</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#informationAboutEvent">informationAboutEvent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#isDirectSubEventObjectOf">isDirectSubEventObjectOf</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<a href="#isSubEventObjectOf">isSubEventObjectOf</a>
+</li>
+<li>
+<a href="#isEventObjectPartOf">isEventObjectPartOf</a>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inRangeOf" title="Inverse of rdfs:range. Defined in Ontology Documentation Profile">In Range Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#refersToEventObjectConstituent">refersToEventObjectConstituent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#refersToEventObjectComponent">refersToEventObjectComponent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasDirectSubEventObject">hasDirectSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasEventObjectComponent">hasEventObjectComponent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasSubEventObject">hasSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<a href="#hasEventObjectPart">hasEventObjectPart</a>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/superClassOf" title="Inverse of RDFS' subClassOf. Defined in Ontology Documentation Profile">Super Class Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#simpleeventobject">SimpleEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#SensorOutput">SensorOutput</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="compositeeventobject">
+<h3>composite event object
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#CompositeEventObject</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>An event object that is composed of a set of other event objects, i.e. its parts.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+</th>
+<td>
+<span>
+<span>
+<a href="#hasEventObjectPart">hasEventObjectPart</a>some<br/>
+</span>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inDomainOf" title="Inverse of rdfs:domain. Defined in Ontology Documentation Profile">In Domain Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#hasEventObjectComponent">hasEventObjectComponent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<a href="#hasEventObjectPart">hasEventObjectPart</a>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inRangeOf" title="Inverse of rdfs:range. Defined in Ontology Documentation Profile">In Range Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#isEventObjectComponentOf">isEventObjectComponentOf</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<a href="#isEventObjectPartOf">isEventObjectPartOf</a>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="ComplexEventObject">
+<h3>Complex event object
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#ComplexEventObject</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>An event that summarizes, represents, or denotes a set of other events, i.e. it is an abstraction over other events. Anything that is not a complex event is instead a simple event.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+</th>
+<td><span>
+<span>
+<span>
+<a href="#hasSubEventObject">hasSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span> <span class="cardinality">or</span> <span>
+<span>
+<a href="#hasEventObjectPart">hasEventObjectPart</a>some<br/>
+</span>
+</span></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inDomainOf" title="Inverse of rdfs:domain. Defined in Ontology Documentation Profile">In Domain Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#hasDirectSubEventObject">hasDirectSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasSubEventObject">hasSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inRangeOf" title="Inverse of rdfs:range. Defined in Ontology Documentation Profile">In Range Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#isDirectSubEventObjectOf">isDirectSubEventObjectOf</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<a href="#isSubEventObjectOf">isSubEventObjectOf</a>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/superClassOf" title="Inverse of RDFS' subClassOf. Defined in Ontology Documentation Profile">Super Class Of</a>
+</th>
+<td>
+<span>
+<a href="#compositeeventobject">CompositeEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="SensorOutput">
+<h3>sensor output
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#SensorOutput</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Class representing the alignement to ssn:SensorOutput, expressing the restriction that an ssn:SensorOutput is either a complex event or a simple event, depending on the sensor used.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</li>
+<li><span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="#simpleeventobject">SimpleEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span></li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+</th>
+<td>
+<a href="http://purl.oclc.org/NET/ssnx/ssn#SensorOutput">ns3:SensorOutput</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="eventobjectheader">
+<h3>event object header
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#EventObjectHeader</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Some event processing systems need to distinguish between an event object header and its body, where the event object header is the part of the event object with known content (e.g. known vocabulary) that can be directly processed by the event processing system. Although a header is considered mandatory for an event object, if not specified what the header consists of, it can be inferred by the system through the fact that it contains the "known" part, as opposed to the body that may contain a payload that the system cannot interpret.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<ul>
+<li><span>
+<span>
+<span>
+<a href="#hasEventDuration">hasEventDuration</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span> <span class="cardinality">or</span> <span>
+<span>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span></li>
+<li><span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span> <span class="cardinality">or</span> <span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span></li>
+<li>
+<span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+</th>
+<td>
+<span>
+<span>
+<span>
+<a href="#isEventObjectHeaderOf">isEventObjectHeaderOf</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inDomainOf" title="Inverse of rdfs:domain. Defined in Ontology Documentation Profile">In Domain Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#refersToEventObjectConstituent">refersToEventObjectConstituent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#refersToEventObjectComponent">refersToEventObjectComponent</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inRangeOf" title="Inverse of rdfs:range. Defined in Ontology Documentation Profile">In Range Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectHeader">hasEventObjectHeader</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/restriction" title="Convenience property for things that subclass owl:Restriction. Defined in Ontology Documentation Profile">Restriction</a>
+</th>
+<td>
+<span>
+<span>
+<span>
+<a href="http://www.w3.org/2000/01/rdf-schema#label">rdfs:label</a>
+<sup class="sup-p" title="RDF Property">p</sup>
+</span>some<br/>
+</span>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="EventObjectPart">
+<h3>event object part
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#EventObjectPart</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#InformationObject">ns2:InformationObject</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+</th>
+<td><span>
+<a href="#eventobjectheader">EventObjectHeader</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="#EventObjectBody">EventObjectBody</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/superClassOf" title="Inverse of RDFS' subClassOf. Defined in Ontology Documentation Profile">Super Class Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#eventobjectheader">EventObjectHeader</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#EventObjectBody">EventObjectBody</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</li>
+</ul>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="EventObjectBody">
+<h3>event object body
+            <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#EventObjectBody</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Some event processing systems need to distinguish between an event object header and its body, where the event object header is the part of the event object with known content (e.g. known vocabulary) that can be directly processed by the event processing system, and the body is the rest of the event object. The body may always be empty or missing.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subClassOf" title="The subject is a subclass of a class. Defined in The RDF Schema vocabulary (RDFS)">Sub Class Of</a>
+</th>
+<td>
+<span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
+</th>
+<td>
+<span>
+<span>
+<span>
+<a href="#isEventObjectBodyOf">isEventObjectBodyOf</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/inRangeOf" title="Inverse of rdfs:range. Defined in Ontology Documentation Profile">In Range Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectBody">hasEventObjectBody</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<span>
+<span>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventDuration">hasEventDuration</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<a href="http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#EventDocumentationDescription">model:EventDocumentationDescription</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#EventInterpretationDescription">model:EventInterpretationDescription</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventObjectHeader">hasEventObjectHeader</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<a href="#simpleeventobject">SimpleEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasSubEventObject">hasSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<span>
+<a href="#hasEventObjectPart">hasEventObjectPart</a>some<br/>
+</span>
+</span>
+<span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="#simpleeventobject">SimpleEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventDuration">hasEventDuration</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<span>
+<span>
+<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
+</span>
+<span>
+<a href="#EventObjectBody">EventObjectBody</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="#eventobjectheader">EventObjectHeader</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<div class="section" id="objectproperties">
+<h2>Object Properties</h2>
+<div class="property entity" id="hasEventDuration">
+<h3>has event duration
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventDuration</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Property for represting a time interval of an event object, rather than a time point. Alternative is to define several time points, using the subproperties of the datatype property hasEventObjectTime.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#TimeInterval">ns2:TimeInterval</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectAttributeValue">
+<h3>has event object attribute value
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectAttributeValue</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#hasRegion">ns2:hasRegion</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/superPropertyOf" title="Inverse of RDFS' subPropertyOf. Defined in Ontology Documentation Profile">Super Property Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#hasEventLocation">hasEventLocation</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasEventDuration">hasEventDuration</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasSensorReadingValue">hasSensorReadingValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td><span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span></td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="isEventObjectHeaderOf">
+<h3>is event object header of
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isEventObjectHeaderOf</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#isComponentOf">ns2:isComponentOf</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="isEventObjectBodyOf">
+<h3>is event object body of
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isEventObjectBodyOf</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#isComponentOf">ns2:isComponentOf</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectHeader">
+<h3>has event object header
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectHeader</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Some event processing systems need to distinguish between an event object header and its body, where the event object header is the part of the event object with known content (e.g. known vocabulary) that can be directly processed by the event processing system. This property relates an event object to its header part.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#hasComponent">ns2:hasComponent</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#eventobjectheader">EventObjectHeader</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="informationAboutEvent">
+<h3>expresses information about an event
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#informationAboutEvent</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#isAbout">ns2:isAbout</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#Event">ns2:Event</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventLocation">
+<h3>has event location
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventLocation</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#SpaceRegion">ns2:SpaceRegion</a>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectBody">
+<h3>has event object body
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectBody</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Some event processing systems need to distinguish between an event object header and its body, where the event object header is the part of the event object with known content (e.g. known vocabulary) that can be directly processed by the event processing system. This property relates an event object to its body part.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#hasComponent">ns2:hasComponent</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#EventObjectBody">EventObjectBody</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="refersToEventObjectConstituent">
+<h3>refers to event object constituent
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#refersToEventObjectConstituent</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Event objects that use a header/body structure can use this property to refer to the constituents (i.e. direct sub-events in an abstraction hierarchy) of the event object. Through a property chain axiom, the presence of a "hasDirectSubEventObject" relation can be inferred.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#eventobjectheader">EventObjectHeader</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="refersToEventObjectComponent">
+<h3>refers to event object component
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#refersToEventObjectComponent</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Event objects that use a header/body structure can use this property to refer to the components (i.e. direct parts) of the event object. Through a property chain axiom, the presence of a "hasEventObjectComponent" relation can be inferred.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#eventobjectheader">EventObjectHeader</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="isEventObjectComponentOf">
+<h3>is event object component of
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isEventObjectComponentOf</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<ul>
+<li>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#isComponentOf">ns2:isComponentOf</a>
+</li>
+<li>
+<a href="#isEventObjectPartOf">isEventObjectPartOf</a>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#compositeeventobject">CompositeEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectComponent">
+<h3>has event object component
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectComponent</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>This non-transitive property expresses the direct relation between an event object and its direct parts, i.e. its components. Using this property a hierarchy of components can be expressed for an event object. The components of the event object do not exist on their own, but exist to "make up" the whole of the encapsulating event, likewise the encapsulating event is not complete without its parts. Please note the difference between this stronger relation, compared to the "hasSubEvent"-property which merely relates event objects to each other, e.g. expressing the triggering of abstractions, but without implying that the events are parts of each other.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<ul>
+<li>
+<a href="#hasEventObjectPart">hasEventObjectPart</a>
+</li>
+<li>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#hasComponent">ns2:hasComponent</a>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#compositeeventobject">CompositeEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasSensorReadingValue">
+<h3>has sensor reading value
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasSensorReadingValue</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Property for expresseing the alignemet to the SSN ontology, equivalent to ssn:hasValue.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasDirectSubEventObject">
+<h3>has direct sub-event object
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasDirectSubEventObject</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>A relation that connects a complex event with the low-level events it is a higher-level representation of. This is a non-transitive relation that can be used to create a hierarchy of levels of sub-events, that represents the reasoning/triggering or abstraction process that led up to the creation or detection of a complex event. The transitive superproperty hasSubEventObject allows for direclty querying for the transitive closure of sub-events, regardless of the hierarchy, even if only this non-transitive sub-property is used in the data.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasSubEventObject">hasSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="isDirectSubEventObjectOf">
+<h3>is direct sub event object of
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isDirectSubEventObjectOf</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="#isSubEventObjectOf">isSubEventObjectOf</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasSubEventObject">
+<h3>has sub-event object
+            <sup class="sup-op" title="OWL Object Property">op</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasSubEventObject</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>A relation that connects a complex event with the low-level events it is a higher-level representation of. An event object may reference another event, on a lower level of abstraction or granularity, upon which is it is based or from which it was derived or triggered, making that other event a "sub event" of this aggregated or more abstract event object. Note that for modelling instance data, normally, the non-transitive sub-property "hasDirectSubEventObject" should be used, based on which the presence of this transitive relation can be inferred.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#hasConstituent">ns2:hasConstituent</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/superPropertyOf" title="Inverse of RDFS' subPropertyOf. Defined in Ontology Documentation Profile">Super Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasDirectSubEventObject">hasDirectSubEventObject</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td>
+<span>
+<a href="#ComplexEventObject">ComplexEventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#range" title="A range of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Range</a>
+</th>
+<td>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<div class="section" id="datatypeproperties">
+<h2>Datatype Properties</h2>
+<div class="property entity" id="hasEventObjectTime">
+<h3>has event object time
+            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectTime</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/superPropertyOf" title="Inverse of RDFS' subPropertyOf. Defined in Ontology Documentation Profile">Super Property Of</a>
+</th>
+<td>
+<ul>
+<li>
+<span>
+<a href="#hasEventObjectSystemTime">hasEventObjectSystemTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasEventObjectExpirationTime">hasEventObjectExpirationTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasEventObjectSamplingTime">hasEventObjectSamplingTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</li>
+<li>
+<span>
+<a href="#hasEventObjectApplicationTime">hasEventObjectApplicationTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</li>
+</ul>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td><span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span></td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectAttributeDataValue">
+<h3>has event object attribute data value
+            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectAttributeDataValue</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<a href="http://www.loa-cnr.it/ontologies/DUL.owl#hasDataValue">ns2:hasDataValue</a>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="https://w3id.org/profile/ontdoc/superPropertyOf" title="Inverse of RDFS' subPropertyOf. Defined in Ontology Documentation Profile">Super Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
+</th>
+<td><span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span></td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectSystemTime">
+<h3>has event object system time
+            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectSystemTime</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>The timestamp of the event according to the event processing system (in terms of its internal clock time), i.e. when the event object was received byt the event processing system through the stream.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectExpirationTime">
+<h3>has event object expiration time
+            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectExpirationTime</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>Time limit on the validity of this event object.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectSamplingTime">
+<h3>has event object sampling time
+            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectSamplingTime</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>The time the event was detected and recorded as data, e.g. when it was recorded by a sensor in terms of the sensor's internal clock.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+<div class="property entity" id="hasEventObjectApplicationTime">
+<h3>has event object application time
+            <sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</h3>
+<table>
+<tr>
+<th>IRI</th>
+<td>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectApplicationTime</code>
+</td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://purl.org/dc/terms/description" title="An account of the resource. Defined in DCMI Metadata Terms">Description</a>
+</th>
+<td><p>The timestamp assigned by the source of the data when it was transmitted, i.e. when it entered the stream.</p></td>
+</tr>
+<tr>
+<th>
+<a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#subPropertyOf" title="The subject is a subproperty of a property. Defined in The RDF Schema vocabulary (RDFS)">Sub Property Of</a>
+</th>
+<td>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>
+</td>
+</tr>
+</table>
+</div>
+</div>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="#EventObject">EventObject</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<span>
+<a href="#EventObjectPart">EventObjectPart</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span>
+<div id="namespaces">
+<h2>Namespaces</h2>
+<dl>
+<dt id=":">:</dt>
+<dd>
+<code>http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#</code>
+</dd>
+<dt id="cpannotationschema">cpannotationschema</dt>
+<dd>
+<code>http://www.ontologydesignpatterns.org/schemas/cpannotationschema.owl#</code>
+</dd>
+<dt id="dc">dc</dt>
+<dd>
+<code>http://purl.org/dc/elements/1.1/</code>
+</dd>
+<dt id="model">model</dt>
+<dd>
+<code>http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#</code>
+</dd>
+<dt id="ns1">ns1</dt>
+<dd>
+<code>http://www.ontologydesignpatterns.org/cp/owl/</code>
+</dd>
+<dt id="ns2">ns2</dt>
+<dd>
+<code>http://www.loa-cnr.it/ontologies/DUL.owl#</code>
+</dd>
+<dt id="ns3">ns3</dt>
+<dd>
+<code>http://purl.oclc.org/NET/ssnx/ssn#</code>
+</dd>
+<dt id="owl">owl</dt>
+<dd>
+<code>http://www.w3.org/2002/07/owl#</code>
+</dd>
+<dt id="rdf">rdf</dt>
+<dd>
+<code>http://www.w3.org/1999/02/22-rdf-syntax-ns#</code>
+</dd>
+<dt id="rdfs">rdfs</dt>
+<dd>
+<code>http://www.w3.org/2000/01/rdf-schema#</code>
+</dd>
+</dl>
+</div>
+<div id="legend">
+<h2>Legend</h2>
+<table class="entity">
+<tr>
+<td>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</td>
+<td>Classes</td>
+</tr>
+<tr>
+<td>
+<sup class="sup-op" title="OWL Object Property">op</sup>
+</td>
+<td>Object Properties</td>
+</tr>
+<tr>
+<td>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</td>
+<td>Datatype Properties</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="pylode">
+<p>made by 
+        <a href="https://github.com/rdflib/pyLODE">
+<span id="p">p</span>
+<span id="y">y</span>
+<span>LODE</span>
+</a>
+<a href="https://github.com/rdflib/pyLODE/release/3.0.4" id="version">3.0.4</a>
+</p>
+</div>
+<div id="toc">
+<h3>Table of Contents</h3>
+<ul class="first">
+<li>
+<h4>
+<a href="#metadata">Metadata</a>
+</h4>
+</li>
+<li>
+<h4>
+<a href="#classes">Classes</a>
+</h4>
+<ul class="second">
+<li>
+<a href="#simpleeventobject">simple event object</a>
+</li>
+<li>
+<a href="#EventObject">Event object</a>
+</li>
+<li>
+<a href="#compositeeventobject">composite event object</a>
+</li>
+<li>
+<a href="#ComplexEventObject">Complex event object</a>
+</li>
+<li>
+<a href="#SensorOutput">sensor output</a>
+</li>
+<li>
+<a href="#eventobjectheader">event object header</a>
+</li>
+<li>
+<a href="#EventObjectPart">event object part</a>
+</li>
+<li>
+<a href="#EventObjectBody">event object body</a>
+</li>
+</ul>
+</li>
+<li>
+<h4>
+<a href="#objectproperties">Object Properties</a>
+</h4>
+<ul class="second">
+<li>
+<a href="#hasEventDuration">has event duration</a>
+</li>
+<li>
+<a href="#hasEventObjectAttributeValue">has event object attribute value</a>
+</li>
+<li>
+<a href="#isEventObjectHeaderOf">is event object header of</a>
+</li>
+<li>
+<a href="#isEventObjectBodyOf">is event object body of</a>
+</li>
+<li>
+<a href="#hasEventObjectHeader">has event object header</a>
+</li>
+<li>
+<a href="#informationAboutEvent">expresses information about an event</a>
+</li>
+<li>
+<a href="#hasEventLocation">has event location</a>
+</li>
+<li>
+<a href="#hasEventObjectBody">has event object body</a>
+</li>
+<li>
+<a href="#refersToEventObjectConstituent">refers to event object constituent</a>
+</li>
+<li>
+<a href="#refersToEventObjectComponent">refers to event object component</a>
+</li>
+<li>
+<a href="#isEventObjectComponentOf">is event object component of</a>
+</li>
+<li>
+<a href="#hasEventObjectComponent">has event object component</a>
+</li>
+<li>
+<a href="#hasSensorReadingValue">has sensor reading value</a>
+</li>
+<li>
+<a href="#hasDirectSubEventObject">has direct sub-event object</a>
+</li>
+<li>
+<a href="#isDirectSubEventObjectOf">is direct sub event object of</a>
+</li>
+<li>
+<a href="#hasSubEventObject">has sub-event object</a>
+</li>
+</ul>
+</li>
+<li>
+<h4>
+<a href="#datatypeproperties">Datatype Properties</a>
+</h4>
+<ul class="second">
+<li>
+<a href="#hasEventObjectTime">has event object time</a>
+</li>
+<li>
+<a href="#hasEventObjectAttributeDataValue">has event object attribute data value</a>
+</li>
+<li>
+<a href="#hasEventObjectSystemTime">has event object system time</a>
+</li>
+<li>
+<a href="#hasEventObjectExpirationTime">has event object expiration time</a>
+</li>
+<li>
+<a href="#hasEventObjectSamplingTime">has event object sampling time</a>
+</li>
+<li>
+<a href="#hasEventObjectApplicationTime">has event object application time</a>
+</li>
+</ul>
+</li>
+<li>
+<h4>
+<a href="#namespaces">Namespaces</a>
+</h4>
+<ul class="second">
+<li>
+<a href="#"></a>
+</li>
+<li>
+<a href="#cpannotationschema">cpannotationschema</a>
+</li>
+<li>
+<a href="#dc">dc</a>
+</li>
+<li>
+<a href="#model">model</a>
+</li>
+<li>
+<a href="#ns1">ns1</a>
+</li>
+<li>
+<a href="#ns2">ns2</a>
+</li>
+<li>
+<a href="#ns3">ns3</a>
+</li>
+<li>
+<a href="#owl">owl</a>
+</li>
+<li>
+<a href="#rdf">rdf</a>
+</li>
+<li>
+<a href="#rdfs">rdfs</a>
+</li>
+</ul>
+</li>
+<li>
+<h4>
+<a href="#legend">Legend</a>
+</h4>
+<ul class="second"></ul>
+</li>
+</ul>
+</div>
+</body>
+</html>
