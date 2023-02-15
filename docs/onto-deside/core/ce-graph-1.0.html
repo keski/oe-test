@@ -327,10 +327,20 @@ code{
 </div>
 </dl>
 </div>
+<script>
+                window.onload = () => {
+                    if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
+                        let iframe = document.getElementById("iframe-overview");
+                        let src = iframe.src;
+                        src = src.substr(src.indexOf(location.host) + location.host.length);
+                        iframe.src = "/docs" + src;
+                    }
+                }
+            </script>
 <div class="section" id="overview">
 <h2>Overview</h2>
 <div class="figure">
-<iframe height="800px" src="webvowl/index.html#ce-graph-1.1" width="100%"></iframe>
+<iframe height="800px" id="iframe-overview" src="/webvowl/index.html#ce-graph-1.0" width="100%"></iframe>
 <div class="caption"><strong>Figure 1:</strong> Ontology overview</div>
 </div>
 
@@ -396,36 +406,36 @@ code{
 <li><span>
 <span>
 <span>
-<a href="#hasEventObjectTime">hasEventObjectTime</a>
-<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
-</span>some<br/>
-</span>
-</span> <span class="cardinality">or</span> <span>
-<span>
-<span>
 <a href="#hasEventDuration">hasEventDuration</a>
 <sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
 </span>
+</span> <span class="cardinality">or</span> <span>
+<span>
+<span>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+</span>some<br/>
+</span>
 </span></li>
 <li><span>
-<a href="http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#EventInterpretationDescription">model:EventInterpretationDescription</a>
-<sup class="sup-c" title="OWL/RDFS Class">c</sup>
-</span> <span class="cardinality">or</span> <span>
 <a href="http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#EventDocumentationDescription">model:EventDocumentationDescription</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
+</span> <span class="cardinality">or</span> <span>
+<a href="http://events.semantic-multimedia.org/ontology/2009/4/15/model.owl#EventInterpretationDescription">model:EventInterpretationDescription</a>
+<sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span></li>
 <li><span>
 <span>
 <span>
-<a href="#hasEventObjectHeader">hasEventObjectHeader</a>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
 <sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
 </span>
 </span> <span class="cardinality">or</span> <span>
 <span>
 <span>
-<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<a href="#hasEventObjectHeader">hasEventObjectHeader</a>
 <sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
 </span>
@@ -1254,10 +1264,10 @@ code{
 <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
 </th>
 <td><span>
-<a href="#EventObjectPart">EventObjectPart</a>
+<a href="#EventObject">EventObject</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span> <span class="cardinality">or</span> <span>
-<a href="#EventObject">EventObject</a>
+<a href="#EventObjectPart">EventObjectPart</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span></td>
 </tr>
@@ -1963,10 +1973,10 @@ code{
 <a class="hover_property" href="http://www.w3.org/2000/01/rdf-schema#domain" title="A domain of the subject property. Defined in The RDF Schema vocabulary (RDFS)">Domain</a>
 </th>
 <td><span>
-<a href="#EventObjectPart">EventObjectPart</a>
+<a href="#EventObject">EventObject</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span> <span class="cardinality">or</span> <span>
-<a href="#EventObject">EventObject</a>
+<a href="#EventObjectPart">EventObjectPart</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span></td>
 </tr>

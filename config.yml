@@ -1,0 +1,9 @@
+ontologies:
+  - ce-graph-1.0:
+    source: "ontology/ce-graph.owl"
+    web_path: "onto-deside/core"
+    version: 1.0
+  - ce-graph-1.1:
+    source: "ontology/ce-graph.owl"
+    web_path: "onto-deside/core"
+    version: 1.1
