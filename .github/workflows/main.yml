@@ -13,3 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: ./run.sh
+  update:
+    steps:
+      - uses: EndBug/add-and-commit@v9
