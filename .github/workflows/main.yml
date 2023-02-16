@@ -8,11 +8,13 @@ on:
 
 jobs:
   build_docs:
-    name: Build ontology documentation
+    name: Build docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - run: ./run.sh
   update:
+    name: Commit docs
+    runs-on: ubuntu-latest
     steps:
       - uses: EndBug/add-and-commit@v9
