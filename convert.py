@@ -56,18 +56,18 @@ def create_documentation(config, dev=False):
         basename = os.path.basename(source).split(".")[0]
         
         # Note: Using the pyLODE package as a module currently fails, calling it using CLI method instead
-        html_file = f"docs/{web_path}/{basename}.html"
+        html_file = f"docs/{web_path}/index.html"
         os.system(f"python3 -m pylode {source} -o {html_file}")      
         
         # Insert overview section into documentation with WebVOWL in an iframe
         with open(html_file, encoding="utf-8") as f:
             soup = BeautifulSoup(f, "html.parser")
-            dev_path = "/docs" if dev else ""
+            dev_path = "docs/" if dev else ""
             overview = BeautifulSoup(f"""
                 <div id="overview" class="section">
                     <h2>Overview</h2>
                     <div class="figure">
-                        <iframe id="iframe-overview" width="100%" height ="800px" src="./{dev_path}webvowl/index.html#{web_path}{basename}"></iframe>
+                        <iframe id="iframe-overview" width="100%" height ="800px" src="/{dev_path}webvowl/index.html#{web_path}{basename}"></iframe>
                         <div class="caption"><strong>Figure 1:</strong> Ontology overview</div>
                     </div>
                 </section>
