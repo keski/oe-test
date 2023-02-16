@@ -1,4 +1,3 @@
-import argparse
 from bs4 import BeautifulSoup
 import os
 import urllib.request
@@ -7,17 +6,17 @@ import zipfile
 
 
 def download_owl2vowl():
-    """Download and extract OWL2VOWL if not already present."""
-    path = "./temp"
-    path_to_jar = f"{path}/owl2vowl.jar"
+    """Download and extract OWL2VOWL."""
+    os.system("mkdir -p temp")
+    path_to_jar = "temp/owl2vowl.jar"
     if not os.path.isfile(path_to_jar):
-        path_to_zip = f"{path}/owl2vowl_0.3.7.zip"
+        path_to_zip = "temp/owl2vowl_0.3.7.zip"
         if not os.path.isfile(path_to_zip):
             url = "http://vowl.visualdataweb.org/downloads/owl2vowl_0.3.7.zip"
             urllib.request.urlretrieve(url, path_to_zip)
 
         with zipfile.ZipFile(path_to_zip, 'r') as zip_ref:
-            zip_ref.extractall(path)
+            zip_ref.extractall("temp/")
 
 
 def generate_vowl(config):
@@ -48,7 +47,7 @@ def copy_ontologies(config):
 
 
 def create_documentation(config):
-    """Generate LODE documentation and instert the VOWL visualization."""
+    """Generate LODE documentation and instert VOWL visualization."""
     for ontology in config["ontologies"]:
         web_path = ontology.get("web_path", "")
         os.system(f"mkdir -p docs/{web_path}")
@@ -82,17 +81,14 @@ def create_documentation(config):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", default="config.yml")
-    
-    args = parser.parse_args()
-    with open(args.config, 'r') as f:
+    with open("config.yml", 'r') as f:
         config = yaml.load(f, Loader=yaml.FullLoader)
     
     download_owl2vowl()
     generate_vowl(config)
     copy_ontologies(config)
     create_documentation(config)
+
 
 if __name__ == "__main__":
     main()
