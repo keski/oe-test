@@ -1,0 +1,12 @@
+on:
+  push:
+    - main
+    - release/*
+  jobs:
+    generate_docs:
+      name: Deploy ontology documentation
+      runs-on: ubuntu-18.04
+      steps:
+        name: Run build script
+        run: ./.github/run.sh
+        shell: bash
