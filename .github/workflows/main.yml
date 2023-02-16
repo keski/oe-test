@@ -8,5 +8,5 @@ on:
       runs-on: ubuntu-18.04
       steps:
         name: Run build script
-        run: ./.github/run.sh
+        run: ./run.sh
         shell: bash
