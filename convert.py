@@ -67,7 +67,7 @@ def create_documentation(config, dev=False):
                 <div id="overview" class="section">
                     <h2>Overview</h2>
                     <div class="figure">
-                        <iframe id="iframe-overview" width="100%" height ="800px" src="{dev_path}/webvowl/index.html#{web_path}{basename}"></iframe>
+                        <iframe id="iframe-overview" width="100%" height ="800px" src="./{dev_path}webvowl/index.html#{web_path}{basename}"></iframe>
                         <div class="caption"><strong>Figure 1:</strong> Ontology overview</div>
                     </div>
                 </section>
