@@ -11,4 +11,4 @@ jobs:
     name: Build ontology documentation
     runs-on: ubuntu-latest
     steps:
-      - run: ./run.sh
+      - run: ./.github/run.sh
