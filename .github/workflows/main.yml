@@ -7,14 +7,29 @@ on:
       - 'releases/**'
 
 jobs:
-  build_docs:
-    name: Build docs
+  build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - run: ./run.sh
-  update:
-    name: Commit docs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: EndBug/add-and-commit@v9
+
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content to github runner
+
+      - name: install python packages
+        run: |
+          pip install -r requirements.txt
+          
+      - name: execute python build script
+        run: python build.py
+          
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "update docs" -a
+          
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
