@@ -47,13 +47,16 @@ def copy_ontologies(config):
         os.system(f"cp {source} docs/{web_path}")
 
 
-def create_documentation(config, dev=False):
+def create_documentation(config):
     """Generate LODE documentation and instert the VOWL visualization."""
     for ontology in config["ontologies"]:
         web_path = ontology.get("web_path", "")
         os.system(f"mkdir -p docs/{web_path}")
         source = ontology["source"]
         basename = os.path.basename(source).split(".")[0]
+        
+        # Relative path to the webvowl lib
+        rel = "../" * web_path.count("/")
         
         # Note: Using the pyLODE package as a module currently fails, calling it using CLI method instead
         html_file = f"docs/{web_path}/index.html"
@@ -62,12 +65,11 @@ def create_documentation(config, dev=False):
         # Insert overview section into documentation with WebVOWL in an iframe
         with open(html_file, encoding="utf-8") as f:
             soup = BeautifulSoup(f, "html.parser")
-            dev_path = "docs/" if dev else ""
             overview = BeautifulSoup(f"""
                 <div id="overview" class="section">
                     <h2>Overview</h2>
                     <div class="figure">
-                        <iframe id="iframe-overview" width="100%" height ="800px" src="/{dev_path}webvowl/index.html#{web_path}{basename}"></iframe>
+                        <iframe id="iframe-overview" width="100%" height ="800px" src="{rel}/webvowl/index.html#{web_path}{basename}"></iframe>
                         <div class="caption"><strong>Figure 1:</strong> Ontology overview</div>
                     </div>
                 </section>
@@ -82,7 +84,6 @@ def create_documentation(config, dev=False):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--config", default="config.yml")
-    parser.add_argument("-d", "--dev", action="store_true")
     
     args = parser.parse_args()
     with open(args.config, 'r') as f:
@@ -91,7 +92,7 @@ def main():
     download_owl2vowl()
     generate_vowl(config)
     copy_ontologies(config)
-    create_documentation(config, dev=args.dev)
+    create_documentation(config)
 
 if __name__ == "__main__":
     main()
