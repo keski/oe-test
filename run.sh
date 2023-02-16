@@ -1,6 +1,4 @@
-################################################
-# Script for generating ontology documentation #
-################################################
+#!/usr/bin/env bash
 # Requirements:
 # - Java 8 or higher
 # - Python 3
@@ -21,4 +19,4 @@ else
 fi
 
 # Run script
-python3 convert.py
+python3 convert.py $@

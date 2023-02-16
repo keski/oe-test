@@ -1,3 +1,4 @@
+import argparse
 from bs4 import BeautifulSoup
 import os
 import urllib.request
@@ -6,7 +7,7 @@ import zipfile
 
 
 def download_owl2vowl():
-    """Download and extract OWL2VOWL."""
+    """Download and extract OWL2VOWL if not already present."""
     path = "./temp"
     path_to_jar = f"{path}/owl2vowl.jar"
     if not os.path.isfile(path_to_jar):
@@ -20,54 +21,53 @@ def download_owl2vowl():
 
 
 def generate_vowl(config):
-    """Generates VOWL specifications fpr ontologies."""
-    # Note: The flag "add-opens" fixes an issue with "InaccessibleObjectException"
-    # for later versions of Java
+    """Generate VOWL specifications."""
+    # Note: The flag "add-opens" below fixes an issue with
+    # "InaccessibleObjectException" in later versions of Java
     for ontology in config["ontologies"]:
         source = ontology["source"]
         basename = os.path.basename(source).split(".")[0]
-        version = ontology["version"]
-        
+        web_path = ontology["web_path"]
+        os.system(f"mkdir -p docs/webvowl/data/{web_path}/")
         os.system(f"""
-            java --add-opens java.base/java.lang=ALL-UNNAMED \
+            java -Dlog4j.configurationFile=log4j2.xml \
+                --add-opens java.base/java.lang=ALL-UNNAMED \
                 -jar temp/owl2vowl.jar \
                 -file {source} \
-                -output docs/webvowl/data/{basename}-{version}.json
+                -output docs/webvowl/data/{web_path}/{basename}.json > /dev/null
         """)
 
-def create_documentation(config):
+
+def copy_ontologies(config):
+    """Copy ontologies to web path."""
+    for ontology in config["ontologies"]:
+        source = ontology["source"]
+        web_path = ontology["web_path"]
+        os.system(f"mkdir -p docs/{web_path}")
+        os.system(f"cp {source} docs/{web_path}")
+
+
+def create_documentation(config, dev=False):
+    """Generate LODE documentation and instert the VOWL visualization."""
     for ontology in config["ontologies"]:
         web_path = ontology.get("web_path", "")
         os.system(f"mkdir -p docs/{web_path}")
         source = ontology["source"]
         basename = os.path.basename(source).split(".")[0]
-        version = ontology["version"]
         
         # Note: Using the pyLODE package as a module currently fails, calling it using CLI method instead
-        html_file = f"docs/{web_path}/{basename}-{version}.html"
+        html_file = f"docs/{web_path}/{basename}.html"
         os.system(f"python3 -m pylode {source} -o {html_file}")      
         
         # Insert overview section into documentation with WebVOWL in an iframe
         with open(html_file, encoding="utf-8") as f:
             soup = BeautifulSoup(f, "html.parser")
-            # Dynamically change the reference to webvowl/ when running on localhost
-            dynamic_loading = """
-            <script>
-                window.onload = () => {
-                    if (location.hostname === "localhost" || location.hostname === "127.0.0.1"){
-                        let iframe = document.getElementById("iframe-overview");
-                        let src = iframe.src;
-                        src = src.substr(src.indexOf(location.host) + location.host.length);
-                        iframe.src = "/docs" + src;
-                    }
-                }
-            </script>"""
+            dev_path = "/docs" if dev else ""
             overview = BeautifulSoup(f"""
-                {dynamic_loading}
                 <div id="overview" class="section">
                     <h2>Overview</h2>
                     <div class="figure">
-                        <iframe id="iframe-overview" width="100%" height ="800px" src="/webvowl/index.html#{basename}-{version}"></iframe>
+                        <iframe id="iframe-overview" width="100%" height ="800px" src="{dev_path}/webvowl/index.html#{web_path}{basename}"></iframe>
                         <div class="caption"><strong>Figure 1:</strong> Ontology overview</div>
                     </div>
                 </section>
@@ -75,18 +75,23 @@ def create_documentation(config):
             tag = soup.find(id='metadata')
             tag.insert_after(overview)
             
-        
         with open(html_file, "w") as f:
             f.write(str(soup))
 
 
-def main(config):
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--config", default="config.yml")
+    parser.add_argument("-d", "--dev", action="store_true")
+    
+    args = parser.parse_args()
+    with open(args.config, 'r') as f:
+        config = yaml.load(f, Loader=yaml.FullLoader)
+    
     download_owl2vowl()
     generate_vowl(config)
-    create_documentation(config)
-
+    copy_ontologies(config)
+    create_documentation(config, dev=args.dev)
 
 if __name__ == "__main__":
-    with open('config.yml', 'r') as f:
-        config = yaml.load(f, Loader=yaml.FullLoader)
-    main(config)
+    main()
