@@ -1,12 +1,12 @@
+name: Ontology release
+run-name: ${{ github.actor }} is building documentation using GitHub Actions 🚀
 on:
   push:
     - main
     - release/*
-  jobs:
-    generate_docs:
-      name: Deploy ontology documentation
-      runs-on: ubuntu-18.04
-      steps:
-        name: Run build script
-        run: ./run.sh
-        shell: bash
+jobs:
+  build_docs:
+    name: Build ontology documentation
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./run.sh
