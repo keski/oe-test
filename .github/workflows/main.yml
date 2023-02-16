@@ -2,8 +2,10 @@ name: Ontology release
 run-name: ${{ github.actor }} is building documentation using GitHub Actions 🚀
 on:
   push:
-    - main
-    - release/*
+    branches:
+      - main
+      - 'releases/**'
+
 jobs:
   build_docs:
     name: Build ontology documentation
