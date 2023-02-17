@@ -25,22 +25,7 @@
       "coversRequirements" : [ {
         "identifier" : "coversRequirements",
         "language" : "undefined",
-        "value" : "What actual event does this event object document?",
-        "type" : "label"
-      }, {
-        "identifier" : "coversRequirements",
-        "language" : "undefined",
-        "value" : "What are the parts of this composite event object?",
-        "type" : "label"
-      }, {
-        "identifier" : "coversRequirements",
-        "language" : "undefined",
         "value" : "What event objects are this complex event object and abstraction of?",
-        "type" : "label"
-      }, {
-        "identifier" : "coversRequirements",
-        "language" : "undefined",
-        "value" : "By what sensor was this event object recorded?",
         "type" : "label"
       }, {
         "identifier" : "coversRequirements",
@@ -56,6 +41,21 @@
         "identifier" : "coversRequirements",
         "language" : "undefined",
         "value" : "What are the attribute values of this event object?",
+        "type" : "label"
+      }, {
+        "identifier" : "coversRequirements",
+        "language" : "undefined",
+        "value" : "By what sensor was this event object recorded?",
+        "type" : "label"
+      }, {
+        "identifier" : "coversRequirements",
+        "language" : "undefined",
+        "value" : "What actual event does this event object document?",
+        "type" : "label"
+      }, {
+        "identifier" : "coversRequirements",
+        "language" : "undefined",
+        "value" : "What are the parts of this composite event object?",
         "type" : "label"
       } ],
       "creator" : [ {
@@ -415,7 +415,7 @@
     "label" : {
       "IRI-based" : "SensorOutput"
     },
-    "attributes" : [ "equivalent", "external" ],
+    "attributes" : [ "external", "equivalent" ],
     "id" : "71"
   }, {
     "instances" : 0,
@@ -654,7 +654,7 @@
     "comment" : {
       "undefined" : "This transitive property represents a partonomy relation between event objects. An event object can consist of several \"partial events\" that together make up the complete event object. The parts of the event object do not exist on their own, but exist to \"make up\" the whole of the encapsulating event, likewise the encapsulating event is not complete without its parts. Please note the difference between this stronger relation, compared to the \"hasSubEvent\"-property which merely relates event objects to each other, e.g. expressing the triggering of abstractions, but without implying that the events are parts of each other."
     },
-    "attributes" : [ "object", "transitive" ],
+    "attributes" : [ "transitive", "object" ],
     "id" : "6"
   }, {
     "iri" : "http://www.loa-cnr.it/ontologies/DUL.owl#isAbout",
@@ -665,17 +665,17 @@
     },
     "domain" : "19",
     "subproperty" : [ "20" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "18"
   }, {
     "range" : "11",
     "domain" : "10",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "21"
   }, {
     "range" : "2",
     "domain" : "16",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "22"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#informationAboutEvent",
@@ -692,32 +692,32 @@
   }, {
     "range" : "16",
     "domain" : "7",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "23"
   }, {
     "range" : "11",
     "domain" : "2",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "24"
   }, {
     "range" : "10",
     "domain" : "12",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "25"
   }, {
     "range" : "10",
     "domain" : "1",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "26"
   }, {
     "range" : "2",
     "domain" : "15",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "27"
   }, {
     "range" : "2",
     "domain" : "14",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "28"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isEventObjectPartOf",
@@ -731,7 +731,7 @@
     "superproperty" : [ "30" ],
     "domain" : "2",
     "subproperty" : [ "31" ],
-    "attributes" : [ "object", "transitive" ],
+    "attributes" : [ "transitive", "object" ],
     "id" : "29"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectAttributeDataValue",
@@ -778,7 +778,7 @@
     },
     "domain" : "19",
     "subproperty" : [ "29" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "30"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isSubEventObjectOf",
@@ -792,7 +792,7 @@
     "superproperty" : [ "43" ],
     "domain" : "2",
     "subproperty" : [ "44" ],
-    "attributes" : [ "object", "transitive" ],
+    "attributes" : [ "transitive", "object" ],
     "id" : "41"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectSamplingTime",
@@ -817,7 +817,7 @@
     },
     "domain" : "19",
     "subproperty" : [ "48" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "47"
   }, {
     "iri" : "http://www.loa-cnr.it/ontologies/DUL.owl#isEventIncludedIn",
@@ -827,7 +827,7 @@
       "IRI-based" : "isEventIncludedIn"
     },
     "domain" : "19",
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "51"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasSubEventObject",
@@ -843,7 +843,7 @@
     "comment" : {
       "undefined" : "A relation that connects a complex event with the low-level events it is a higher-level representation of. An event object may reference another event, on a lower level of abstraction or granularity, upon which is it is based or from which it was derived or triggered, making that other event a \"sub event\" of this aggregated or more abstract event object. Note that for modelling instance data, normally, the non-transitive sub-property \"hasDirectSubEventObject\" should be used, based on which the presence of this transitive relation can be inferred."
     },
-    "attributes" : [ "object", "transitive" ],
+    "attributes" : [ "transitive", "object" ],
     "id" : "42"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectApplicationTime",
@@ -868,7 +868,7 @@
     },
     "domain" : "19",
     "subproperty" : [ "60", "3", "9" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "59"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventDuration",
@@ -894,7 +894,7 @@
     },
     "domain" : "19",
     "subproperty" : [ "0", "64", "31" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "4"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectBody",
@@ -920,7 +920,7 @@
     },
     "domain" : "19",
     "subproperty" : [ "41" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "43"
   }, {
     "iri" : "http://www.loa-cnr.it/ontologies/DUL.owl#hasConstituent",
@@ -931,12 +931,12 @@
     },
     "domain" : "19",
     "subproperty" : [ "42" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "53"
   }, {
     "range" : "16",
     "domain" : "15",
-    "attributes" : [ "object", "anonymous" ],
+    "attributes" : [ "anonymous", "object" ],
     "id" : "67"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectPart",
@@ -952,7 +952,7 @@
     "comment" : {
       "undefined" : "This transitive property represents a partonomy relation between event objects. An event object can consist of several \"partial events\" that together make up the complete event object. The parts of the event object do not exist on their own, but exist to \"make up\" the whole of the encapsulating event, likewise the encapsulating event is not complete without its parts. Please note the difference between this stronger relation, compared to the \"hasSubEvent\"-property which merely relates event objects to each other, e.g. expressing the triggering of abstractions, but without implying that the events are parts of each other."
     },
-    "attributes" : [ "object", "someValues", "transitive" ],
+    "attributes" : [ "someValues", "transitive", "object" ],
     "id" : "68"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isEventObjectBodyOf",
@@ -965,7 +965,7 @@
     },
     "superproperty" : [ "4" ],
     "domain" : "12",
-    "attributes" : [ "object", "someValues" ],
+    "attributes" : [ "someValues", "object" ],
     "id" : "69"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasSensorReadingValue",
@@ -990,7 +990,7 @@
       "IRI-based" : "hasDataValue"
     },
     "domain" : "19",
-    "attributes" : [ "datatype", "external" ],
+    "attributes" : [ "external", "datatype" ],
     "id" : "73"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isEventObjectHeaderOf",
@@ -1003,7 +1003,7 @@
     },
     "superproperty" : [ "4" ],
     "domain" : "1",
-    "attributes" : [ "object", "someValues" ],
+    "attributes" : [ "someValues", "object" ],
     "id" : "74"
   }, {
     "iri" : "http://www.w3.org/2000/01/rdf-schema#label",
@@ -1013,7 +1013,7 @@
       "IRI-based" : "label"
     },
     "domain" : "1",
-    "attributes" : [ "datatype", "external", "someValues" ],
+    "attributes" : [ "external", "datatype", "someValues" ],
     "id" : "75"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#isEventObjectComponentOf",
@@ -1052,7 +1052,7 @@
     },
     "domain" : "19",
     "subproperty" : [ "6" ],
-    "attributes" : [ "object", "external" ],
+    "attributes" : [ "external", "object" ],
     "id" : "8"
   }, {
     "iri" : "http://www.ontologydesignpatterns.org/cp/owl/eventprocessing.owl#hasEventObjectHeader",
