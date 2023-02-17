@@ -396,15 +396,15 @@ code{
 <li><span>
 <span>
 <span>
-<a href="#hasEventDuration">hasEventDuration</a>
-<sup class="sup-op" title="OWL Object Property">op</sup>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
 </span>some<br/>
 </span>
 </span> <span class="cardinality">or</span> <span>
 <span>
 <span>
-<a href="#hasEventObjectTime">hasEventObjectTime</a>
-<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+<a href="#hasEventDuration">hasEventDuration</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
 </span>
 </span></li>
@@ -418,15 +418,15 @@ code{
 <li><span>
 <span>
 <span>
-<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
-<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
 </span>
 </span> <span class="cardinality">or</span> <span>
 <span>
 <span>
-<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
-<sup class="sup-op" title="OWL Object Property">op</sup>
+<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
 </span>some<br/>
 </span>
 </span> <span class="cardinality">or</span> <span>
@@ -460,10 +460,10 @@ code{
 </span>
 </li>
 <li><span>
-<a href="#ComplexEventObject">ComplexEventObject</a>
+<a href="#simpleeventobject">SimpleEventObject</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span> <span class="cardinality">or</span> <span>
-<a href="#simpleeventobject">SimpleEventObject</a>
+<a href="#ComplexEventObject">ComplexEventObject</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span></li>
 </ul>
@@ -697,14 +697,14 @@ code{
 </th>
 <td><span>
 <span>
+<a href="#hasEventObjectPart">hasEventObjectPart</a>some<br/>
+</span>
+</span> <span class="cardinality">or</span> <span>
+<span>
 <span>
 <a href="#hasSubEventObject">hasSubEventObject</a>
 <sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
-</span>
-</span> <span class="cardinality">or</span> <span>
-<span>
-<a href="#hasEventObjectPart">hasEventObjectPart</a>some<br/>
 </span>
 </span></td>
 </tr>
@@ -835,30 +835,30 @@ code{
 <li><span>
 <span>
 <span>
-<a href="#hasEventObjectTime">hasEventObjectTime</a>
-<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+<a href="#hasEventDuration">hasEventDuration</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
 </span>
 </span> <span class="cardinality">or</span> <span>
 <span>
 <span>
-<a href="#hasEventDuration">hasEventDuration</a>
-<sup class="sup-op" title="OWL Object Property">op</sup>
+<a href="#hasEventObjectTime">hasEventObjectTime</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
 </span>some<br/>
 </span>
 </span></li>
 <li><span>
 <span>
 <span>
-<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
-<sup class="sup-op" title="OWL Object Property">op</sup>
+<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
+<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
 </span>some<br/>
 </span>
 </span> <span class="cardinality">or</span> <span>
 <span>
 <span>
-<a href="#hasEventObjectAttributeDataValue">hasEventObjectAttributeDataValue</a>
-<sup class="sup-dp" title="OWL Datatype Property">dp</sup>
+<a href="#hasEventObjectAttributeValue">hasEventObjectAttributeValue</a>
+<sup class="sup-op" title="OWL Object Property">op</sup>
 </span>some<br/>
 </span>
 </span></li>
@@ -959,10 +959,10 @@ code{
 <a class="hover_property" href="http://www.w3.org/2002/07/owl#equivalentClass" title="The property that determines that two given classes are equivalent, and that is used to specify datatype definitions. Defined in The OWL 2 Schema vocabulary (OWL 2)">Equivalentclass</a>
 </th>
 <td><span>
-<a href="#eventobjectheader">EventObjectHeader</a>
+<a href="#EventObjectBody">EventObjectBody</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span> <span class="cardinality">or</span> <span>
-<a href="#EventObjectBody">EventObjectBody</a>
+<a href="#eventobjectheader">EventObjectHeader</a>
 <sup class="sup-c" title="OWL/RDFS Class">c</sup>
 </span></td>
 </tr>
